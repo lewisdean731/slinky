@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+CHANNELS = str(os.getenv('MONITORED_CHANNELS')).split(",") 
 
 client = discord.Client()
 
@@ -16,9 +17,16 @@ client = discord.Client()
 async def on_ready():
     for guild in client.guilds:
         print(
-            f'{client.user} is connected to:\n'
+            f'{client.user} connected to:\n'
             f'{guild.name}(id: {guild.id})\n'
+            'And monitoring channels:\n'
+            f'{CHANNELS}'
         )
-    
+
+@client.event
+async def on_message(message):
+    print('Message Sent!')
+    if str(message.channel) in CHANNELS:
+        print(f'Message sent in monitored channel: {message.channel}') 
 
 client.run(TOKEN)
