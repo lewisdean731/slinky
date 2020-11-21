@@ -6,7 +6,7 @@ import logging
 # Provide .env file with following environment variables:
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+GUILD = os.getenv('DISCORD_GUILD_NAME')
 LOGLEVEL = str(os.getenv('LOGLEVEL'))
 CHANNELS = str(os.getenv('MONITORED_CHANNELS')).split(",") 
 
@@ -27,8 +27,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    print('Message Sent!')
+    hyperlinks = ['https://', 'http://']
     if str(message.channel) in CHANNELS:
-        print(f'Message sent in monitored channel: {message.channel}') 
+        logging.info(f'Message sent in monitored channel: {message.channel}') 
+    else:
+        logging.info(f'Message sent in channel: {message.channel} - ignoring')
+        return
+    if any(linkStart in message.content.lower() for linkStart in hyperlinks):
+        logging.info('Message contains a link!')
+    else:
+        logging.info('Message does not contain a link - deleting..')
+        await message.delete(delay = 2)
 
 client.run(TOKEN)
