@@ -1,7 +1,9 @@
 import os
-
 import discord
 from dotenv import load_dotenv
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 # Provide .env file with following environment variables:
 load_dotenv()
@@ -17,5 +19,6 @@ async def on_ready():
             f'{client.user} is connected to:\n'
             f'{guild.name}(id: {guild.id})\n'
         )
+    
 
 client.run(TOKEN)
