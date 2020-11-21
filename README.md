@@ -1,0 +1,2 @@
+# slinky
+Little discord bot
