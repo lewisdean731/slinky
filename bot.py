@@ -15,6 +15,17 @@ logging.basicConfig(level=LOGLEVEL)
 
 client = discord.Client()
 
+async def informAuthor(message):
+    author = message.author
+    logging.info(f'Sending a message to {author} about deleted message')
+    await author.create_dm()
+    await author.dm_channel.send(
+        f'Hi {author}, your message in #mod-releases was deleted. Only post ' \
+        'links to mod releases! If you want to add a short description / '\
+        'picture, you can post a message containing the link to the mod, '\
+        'or edit an existing message.'
+    )
+
 @client.event
 async def on_ready():
     for guild in client.guilds:
@@ -38,5 +49,6 @@ async def on_message(message):
     else:
         logging.info('Message does not contain a link - deleting..')
         await message.delete(delay = 2)
+        await informAuthor(message)
 
 client.run(TOKEN)
